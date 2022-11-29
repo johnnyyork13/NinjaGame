@@ -10,6 +10,8 @@ class Player():
         self.width = TILE_SIZE
         self.height = TILE_SIZE
         self.hitbox = pg.Rect(self.x, self.y, self.width, self.height)
+        self.collide_x = False
+        self.collide_y = False
 
     def move(self):
         dx = 0
@@ -17,27 +19,45 @@ class Player():
 
         keys = pg.key.get_pressed()
 
-        if keys[pg.K_d]:
+        if keys[pg.K_d] and not self.collide_x:
             dx += self.vel
-        if keys[pg.K_a]:
+        if keys[pg.K_a] and not self.collide_x:
             dx -= self.vel
-        if keys[pg.K_w]:
+        if keys[pg.K_w] and not self.collide_y:
             dy -= self.vel
-        if keys[pg.K_s]:
+        if keys[pg.K_s] and not self.collide_y:
             dy += self.vel
 
+        #GRAVITY
+        dy += self.vel / 2
+
         #COLLISION
-        for tiles in self.map:
-            #LEFT TO RIGHT COLLISION
-            if self.x + dx < 0 or (self.x + self.width + dx) > SCREEN_RESOLUTION[0]:
-                if pg.Rect(self.x )
-               self.x + dx < pg.Rect(tiles[0]).right or self.x + self.width + dx > pg.Rect(tiles[0]).left):
+            #CHECK IF OUT OF SCREEN
+        if self.x + dx < 0 or (self.x + self.width + dx) > SCREEN_RESOLUTION[0]:
+            self.collide_x = True
+        else:
+            self.collide_y = False
+
+        if self.y + dy < 0 or (self.y + self.height + dy) > SCREEN_RESOLUTION[1]:
+            self.collide_y = True
+            dx -= 1
+        else:
+            self.collide_y = False
             
-                print('here')
-                dx = 0
-            #TOP TO BOTTOM COLLISION
-            if self.y + dy < 0 or (self.y + self.height + dy) > SCREEN_RESOLUTION[1]:
-                dy = 0
+            
+        #CHECK COLLISION FOR TILES
+        for tiles in self.map:
+            tile = pg.Rect(tiles[0])
+            player = pg.Rect(int(self.x + dx), int(self.y + dy), TILE_SIZE, TILE_SIZE)
+            #LEFT TO RIGHT COLLISION
+            if player.colliderect(tile):
+                if player.left < tile.right:
+                    dx = 0
+                if player.top < tile.bottom:
+                    dy = 0
+
+            
+        
 
 
         self.x += dx
