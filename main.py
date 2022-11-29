@@ -1,27 +1,19 @@
 import pygame as pg
-from settings import *
 from game import *
 from world import *
+from settings import *
 from player import *
 
-win = pg.display.set_mode(SCREEN_RESOLUTION)
 
-if __name__ == '__main__':
-
-    game = Game(win)
+if __name__ == "__main__":
+    game = Game()
+    player = Player(game.win)
     world = World(game.win)
-    world.get_map()
-
-    player = Player(game.win, world.map)
+    world.make_map()
 
     while True:
-        
-        world.draw_tiles()
 
-        player.update()
-        
-        pg.display.update()
+
+        world.draw_map()
+        player.update(world.map)
         game.update()
-        game.events()
-
-
