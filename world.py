@@ -2,17 +2,19 @@ import pygame as pg
 from game import *
 from settings import *
 
+_ = False
+
 level_one = [
 
     [1,1,1,1,1,1,1,1,1,1,],
-    [1, 9, 9, 9, 9, 9, 9, 9, 9, 1],
-    [1, 9, 9, 9, 9, 9, 9, 9, 9, 1],
-    [1, 9, 9, 9, 9, 9, 9, 9, 9, 1],
-    [1, 9, 9, 9, 9, 9, 9, 9, 9, 1],
-    [1, 2, 9, 9, 9, 9, 9, 9, 9, 1],
-    [1, 2, 2, 9, 9, 9, 9, 9, 9, 1],
-    [1, 2, 2, 2, 9, 9, 9, 9, 9, 1],
-    [1, 2, 2, 2, 2, 9, 9, 9, 9, 1],
+    [1, _, _, _, _, _, _, _, _, 1],
+    [1, _, _, _, _, _, _, _, _, 1],
+    [1, _, _, _, _, _, _, _, _, 1],
+    [1, _, _, _, _, _, _, _, _, 1],
+    [1, 2, _, _, _, _, _, _, _, 1],
+    [1, 2, 2, _, _, _, _, _, _, 1],
+    [1, 2, 2, 2, _, _, _, _, _, 1],
+    [1, 2, 2, 2, 2, _, _, _, _, 1],
     [1,1,1,1,1,1,1,1,1,1,]
 
 ]
@@ -20,21 +22,18 @@ level_one = [
 class World:
     def __init__(self, win):
         self.win = win
-        self.map = {}
+        self.map = []
 
     def get_map(self):
         for row_id, rows in enumerate(level_one):
             for column_id, value in enumerate(rows):
                 if value:
-                    self.map[(column_id, row_id)] = value
-        
-        print(self.map)
+                    self.map.append([pg.Rect(column_id*TILE_SIZE, row_id*TILE_SIZE, TILE_SIZE, TILE_SIZE), value])
+
 
     def draw_tiles(self):
-        for tiles in self.map.items():
+        for tiles in self.map:
             if tiles[1] == 1:
-                pg.draw.rect(self.win, GREEN, (tiles[0][0] * TILE_SIZE, tiles[0][1] * TILE_SIZE, TILE_SIZE, TILE_SIZE), 2)
+                pg.draw.rect(self.win, GREEN, tiles[0])
             elif tiles[1] == 2:
-                pg.draw.rect(self.win, RED, (tiles[0][0] * TILE_SIZE, tiles[0][1] * TILE_SIZE, TILE_SIZE, TILE_SIZE), 2)
-
-    
+                pg.draw.rect(self.win, BLUE, tiles[0])
