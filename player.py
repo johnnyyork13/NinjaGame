@@ -6,7 +6,8 @@ class Player():
         self.win = win
         self.x = 500
         self.y = 500
-        self.vel = 5
+        self.vel_x = 5
+        self.vel_y = 0
         self.width = TILE_SIZE
         self.height = TILE_SIZE
         self.hitbox = pg.Rect(self.x, self.y, self.width, self.height)
@@ -20,41 +21,22 @@ class Player():
         keys = pg.key.get_pressed()
 
         if keys[pg.K_d] and not self.collide_x:
-            dx += self.vel
+            dx += self.vel_x
         if keys[pg.K_a] and not self.collide_x:
-            dx -= self.vel
-        if keys[pg.K_w] and not self.collide_y:
-            dy -= self.vel
-        if keys[pg.K_s] and not self.collide_y:
-            dy += self.vel
+            dx -= self.vel_x
+        
 
         #GRAVITY
-        dy += self.vel / 2
-
-        #COLLISION
-            #CHECK IF OUT OF SCREEN
-        if self.x + dx < 0 or (self.x + self.width + dx) > SCREEN_RESOLUTION[0]:
-            self.collide_x = True
-        else:
-            self.collide_y = False
-
-        if self.y + dy < 0 or (self.y + self.height + dy) > SCREEN_RESOLUTION[1]:
-            self.collide_y = True
-            dx -= 1
-        else:
-            self.collide_y = False
+        dy += 5
             
             
         #CHECK COLLISION FOR TILES
         for tiles in self.map:
-            tile = pg.Rect(tiles[0])
-            player = pg.Rect(int(self.x + dx), int(self.y + dy), TILE_SIZE, TILE_SIZE)
-            #LEFT TO RIGHT COLLISION
-            if player.colliderect(tile):
-                if player.left < tile.right:
-                    dx = 0
-                if player.top < tile.bottom:
-                    dy = 0
+            if tiles[0].colliderect(pg.Rect(self.x, self.y + dy, self.width, self.height)):
+                dy = 0
+
+            if tiles[0].colliderect(pg.Rect(self.x + dx, self.y, self.width, self.height)):
+                dx = 0
 
             
         
