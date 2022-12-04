@@ -18,6 +18,11 @@ class Player():
         self.dy = 0
         self.door = False
         self.coin = False
+        self.state = 0
+        self.state_change = False
+        self.climb = False
+        self.ladder = False
+        
 
     def move(self):
         self.dx = 0
@@ -29,6 +34,12 @@ class Player():
             self.dx += self.vel_x
         if keys[pg.K_a] and not self.collide_x:
             self.dx -= self.vel_x
+        if keys[pg.K_w] and self.ladder:
+            self.climb = True
+            self.dy -= 5
+        else:
+            self.climb = False
+
 
         if keys[pg.K_SPACE] and not self.jumping:
             self.vel_y -= 15
@@ -40,7 +51,8 @@ class Player():
         if self.vel_y >= JUMP_RATE:
             self.vel_y = JUMP_RATE
         
-        self.dy += self.vel_y
+        if not self.climb:
+            self.dy += self.vel_y
             
 
     def collision(self):
@@ -55,11 +67,31 @@ class Player():
             if tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y, self.width, self.height)) and (tiles[1] in [1,2]):
                 self.dx = 0
             
-            if tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)) and (tiles[1] not in [1,2]):
+            #PICKUPS AND DOORS
+            if tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)):
                 if tiles[1] == 3:
-                    print('door')
+                    self.state += 1
+                    self.state_change = False
+
                 if tiles[1] == 4:
                     tiles[0][0] = 1000
+
+                if tiles[1] == 5:
+                    self.ladder = True
+            elif tiles[1] == 5 and tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)) == False:
+                self.ladder = False
+                print('Bababooee')
+                    
+
+            
+                
+                    
+                    
+            
+                
+                    
+                
+
 
     def update_player(self):
         #update player position
