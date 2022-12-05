@@ -20,7 +20,7 @@ class Player():
         self.coin = False
         self.state = 0
         self.state_change = False
-        self.climb = False
+        self.climbing = False
         self.ladder = False
         
 
@@ -35,10 +35,10 @@ class Player():
         if keys[pg.K_a] and not self.collide_x:
             self.dx -= self.vel_x
         if keys[pg.K_w] and self.ladder:
-            self.climb = True
+            self.climbing = True
             self.dy -= 5
-        else:
-            self.climb = False
+        elif not self.ladder:
+            self.climbing = False
 
 
         if keys[pg.K_SPACE] and not self.jumping:
@@ -51,35 +51,39 @@ class Player():
         if self.vel_y >= JUMP_RATE:
             self.vel_y = JUMP_RATE
         
-        if not self.climb:
+        if not self.climbing:
             self.dy += self.vel_y
             
 
     def collision(self):
         #CHECK COLLISION FOR TILES
         for tiles in self.map:
-            if tiles[0].colliderect(pg.Rect(self.x, self.y + self.dy, self.width, self.height)) and (tiles[1] in [1,2]):
-                if self.vel_y <= JUMP_RATE:
-                    self.vel_y = 0
-                self.dy = 0
-                self.jumping = False
+            if tiles[1] != 5 and not self.climbing:
+                if tiles[0].colliderect(pg.Rect(self.x, self.y + self.dy, self.width, self.height)) and (tiles[1] in [1,2]):
+                    if self.vel_y <= JUMP_RATE:
+                        self.vel_y = 0
+                    self.dy = 0
+                    self.jumping = False
 
-            elif tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y, self.width, self.height)) and (tiles[1] in [1,2]):
-                self.dx = 0
-            
-            #PICKUPS AND DOORS
-            elif tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)):
-                if tiles[1] == 3:
-                    self.state += 1
-                    self.state_change = False
+                elif tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y, self.width, self.height)) and (tiles[1] in [1,2]):
+                    self.dx = 0
+                
+                #PICKUPS AND DOORS
+                elif tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)):
+                    if tiles[1] == 3:
+                        self.state += 1
+                        self.state_change = False
 
-                if tiles[1] == 4:
-                    tiles[0][0] = 1000
-
-                if tiles[1] == 5:
-                    self.ladder = True
-                else:
-                    self.ladder = False
+                    if tiles[1] == 4:
+                        tiles[0][0] = 1000
+            elif tiles[1] == 5 and tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)):
+                self.ladder = True
+            elif tiles[1] == 5 and tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)) == False and not self.climbing:
+                self.ladder = False
+                print('here')
+                
+    
+        
                 
 
             
