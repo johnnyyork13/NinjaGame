@@ -64,11 +64,11 @@ class Player():
                 self.dy = 0
                 self.jumping = False
 
-            if tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y, self.width, self.height)) and (tiles[1] in [1,2]):
+            elif tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y, self.width, self.height)) and (tiles[1] in [1,2]):
                 self.dx = 0
             
             #PICKUPS AND DOORS
-            if tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)):
+            elif tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)):
                 if tiles[1] == 3:
                     self.state += 1
                     self.state_change = False
@@ -78,10 +78,9 @@ class Player():
 
                 if tiles[1] == 5:
                     self.ladder = True
-            elif tiles[1] == 5 and tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)) == False:
-                self.ladder = False
-                print('Bababooee')
-                    
+                else:
+                    self.ladder = False
+                
 
             
                 
