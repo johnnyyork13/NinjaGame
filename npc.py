@@ -8,6 +8,7 @@ class NPC:
         self.win = win
 
     def move(self):
+        #checking github contribution thing
         pass
 
 
