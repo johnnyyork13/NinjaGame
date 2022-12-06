@@ -14,7 +14,6 @@ if __name__ == "__main__":
 
     while True:
         if player.state_change == False:
-            
             world.make_map()
             player.state_change = True
 

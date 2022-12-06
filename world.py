@@ -7,7 +7,7 @@ from levels import *
 class World:
     def __init__(self, win):
         self.win = win
-        self.map = []
+        self.map = [[], []]
         self.current_level = level_one
 
     def check_map(self, state):
@@ -18,15 +18,18 @@ class World:
         
 
     def make_map(self):
-        self.map = []
+        self.map[0] = []
+        self.map[1] = []
         for row_id, rows in enumerate(self.current_level):
             for column_id, columns in enumerate(rows):
                 if columns:
-                    self.map.append([pg.Rect(column_id*TILE_SIZE, row_id*TILE_SIZE, TILE_SIZE, TILE_SIZE), columns])
+                    self.map[0].append([pg.Rect(column_id*TILE_SIZE, row_id*TILE_SIZE, TILE_SIZE, TILE_SIZE), columns])
+                if columns == 5: #ladders
+                    self.map[1].append(pg.Rect(column_id*TILE_SIZE, row_id*TILE_SIZE, TILE_SIZE, TILE_SIZE))
                 
 
     def draw_map(self):
-        for tiles in self.map:
+        for tiles in self.map[0]:
             if tiles[1] == 1:
                 pg.draw.rect(self.win, BLUE, tiles[0])
             elif tiles[1] == 2:
@@ -36,7 +39,7 @@ class World:
             elif tiles[1] == 4:
                 pg.draw.rect(self.win, YELLOW, (tiles[0][0] + COIN_OFFSET, tiles[0][1] + COIN_OFFSET, COIN_SIZE, COIN_SIZE) )
             elif tiles[1] == 5:
-                pg.draw.rect(self.win, BROWN, tiles[0])
+                pg.draw.rect(self.win, BROWN, tiles[0], 2)
 
 
 

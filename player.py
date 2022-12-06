@@ -38,44 +38,35 @@ class Player():
             self.dx -= self.vel_x
         
 
-        if keys[pg.K_SPACE] and not self.jumping:
+        if keys[pg.K_SPACE] and not self.jumping and self.climbing == False:
             self.vel_y -= 15
             self.jumping = True
         
 
         #GRAVITY
-        if self.climbing == False:
-            self.vel_y += 1
-            if self.vel_y >= JUMP_RATE:
-                self.vel_y = JUMP_RATE
+        self.vel_y += 1
+        if self.vel_y >= JUMP_RATE:
+            self.vel_y = JUMP_RATE
         
         
         self.dy += self.vel_y
             
     def ladders(self):
         keys = pg.key.get_pressed()
-        if not self.ladder_check:
-            for tiles in self.map:
-                if tiles[1] == 5:
-                    self.ladder_map.append(tiles[0])
-            self.ladder_check = True
 
-        for tiles in self.ladder_map:
-            if tiles.colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)) and keys[pg.K_w]:
-                self.climbing = True
-                self.dy -= 5
-            else:
-                self.climbing = False
-
-        
-            
-                
+        if self.ladder_map != []:
+            for ladder_blocks in self.ladder_map:
+                if ladder_blocks.colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, TILE_SIZE+15, TILE_SIZE+15)) and keys[pg.K_w]:
+                    self.climbing = True
+                    self.dy -= 10
+                else:
+                    self.climbing = False
             
 
     def collision(self):
         #CHECK COLLISION FOR TILES
         for tiles in self.map:
-
+            #PLATFORM BLOCKS
             if tiles[0].colliderect(pg.Rect(self.x, self.y + self.dy, self.width, self.height)) and tiles[1] in self.BLOCK_LIST:
                 if self.vel_y <= JUMP_RATE:
                     self.vel_y = 0
@@ -87,18 +78,19 @@ class Player():
                 
             #PICKUPS AND DOORS
             if tiles[0].colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, self.width, self.height)) and tiles[1] not in self.BLOCK_LIST:
+                #DOORS
                 if tiles[1] == 3:
                     self.state += 1
                     self.state_change = False
-                    self.ladder_map = []
-                    self.ladder_check = False
-
+                #COINS
                 if tiles[1] == 4:
                     tiles[0][0] = 1000
 
-                    
                 
-
+    def subroutines(self, map):
+        self.map = map[0]
+        self.ladder_map = map[1]
+        self.ladders()
 
     def update_player(self):
         #update player position
@@ -107,11 +99,11 @@ class Player():
 
         #draw player
         pg.draw.rect(self.win, RED, (self.x, self.y, self.width, self.height))
+        #pg.draw.circle(self.win, YELLOW, (self.x+self.width/2, self.y+self.height/2), 20)
     
     def update(self, map):
-        self.map = map
         self.move()
-        self.ladders()
+        self.subroutines(map)
         self.collision()
         
         self.update_player()  
