@@ -56,13 +56,13 @@ class Player():
 
         if self.ladder_map != []:
             for ladder_blocks in self.ladder_map:
-                if ladder_blocks.colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, TILE_SIZE+15, TILE_SIZE+15)) and keys[pg.K_w]:
+                if ladder_blocks.colliderect(pg.Rect(self.x + self.dx, self.y + self.dy, TILE_SIZE+LADDER_OFFSET, TILE_SIZE+LADDER_OFFSET)) and keys[pg.K_w]:
                     self.climbing = True
-                    self.dy -= 10
+                    self.dy -= LADDER_SPEED
                 else:
                     self.climbing = False
-            
 
+            
     def collision(self):
         #CHECK COLLISION FOR TILES
         for tiles in self.map:
@@ -98,7 +98,7 @@ class Player():
         self.y += self.dy
 
         #draw player
-        pg.draw.rect(self.win, RED, (self.x, self.y, self.width, self.height))
+        pg.draw.rect(self.win, GREEN, (self.x, self.y, self.width, self.height))
         #pg.draw.circle(self.win, YELLOW, (self.x+self.width/2, self.y+self.height/2), 20)
     
     def update(self, map):

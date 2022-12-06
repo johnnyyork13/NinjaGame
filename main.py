@@ -3,6 +3,7 @@ from game import *
 from world import *
 from settings import *
 from player import *
+from npc import *
 
 checked_state = False
 
@@ -10,6 +11,7 @@ if __name__ == "__main__":
     game = Game()
     player = Player(game.win)
     world = World(game.win)
+    npc = NPC(game.win)
     
 
     while True:
@@ -20,4 +22,5 @@ if __name__ == "__main__":
         world.check_map(player.state)
         world.draw_map()
         player.update(world.map)
+        npc.update(world.map)
         game.update()
