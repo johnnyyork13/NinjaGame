@@ -1,6 +1,7 @@
 import pygame as pg
 from settings import *
 from levels import *
+from npc import *
 
 
 
@@ -33,7 +34,8 @@ class World:
                 if columns == 5: #ladders
                     self.map[1].append(pg.Rect(column_id*TILE_SIZE, row_id*TILE_SIZE, TILE_SIZE, TILE_SIZE))
                 if columns == 6: #grunts
-                    self.map[2].append(pg.Rect(column_id*TILE_SIZE, row_id*TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                    npc = NPC(self.win)
+                    self.map[2].append(pg.Rect(npc.x, npc.y, npc.width, npc.height))
 
                 
 
@@ -56,7 +58,8 @@ class World:
                 self.win.blit(self.ladder, (tiles[0][0], tiles[0][1]))
                 #pg.draw.rect(self.win, BROWN, tiles[0], 2)
             elif tiles[1] == 6:
-                pg.draw.rect(self.win, RED, tiles[0])
+                #pg.draw.rect(self.win, RED, tiles[0])
+                pass
 
 
 
