@@ -57,9 +57,6 @@ class World:
             elif tiles[1] == 5:
                 self.win.blit(self.ladder, (tiles[0][0], tiles[0][1]))
                 #pg.draw.rect(self.win, BROWN, tiles[0], 2)
-            elif tiles[1] == 6:
-                #pg.draw.rect(self.win, RED, tiles[0])
-                pass
 
 
 
